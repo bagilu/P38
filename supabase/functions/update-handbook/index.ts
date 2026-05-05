@@ -9,31 +9,30 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
-
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
-      headers: corsHeaders
-    });
-  }
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method !== "POST") return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: corsHeaders });
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !serviceRoleKey) return new Response(JSON.stringify({ error: "Missing Supabase environment variables" }), { status: 500, headers: corsHeaders });
 
-    if (!supabaseUrl || !serviceRoleKey) {
-      return new Response(JSON.stringify({ error: "Missing Supabase environment variables" }), {
-        status: 500,
-        headers: corsHeaders
-      });
-    }
+    const token = (req.headers.get("Authorization") || "").replace("Bearer ", "").trim();
+    if (!token) return new Response(JSON.stringify({ error: "Missing Authorization token" }), { status: 401, headers: corsHeaders });
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
-    const body = await req.json();
+    const { data: userData, error: userError } = await supabase.auth.getUser(token);
+    if (userError || !userData?.user?.email) return new Response(JSON.stringify({ error: "Invalid login session" }), { status: 401, headers: corsHeaders });
 
+    const userEmail = userData.user.email;
+    const { data: adminRows, error: adminError } = await supabase
+      .from("TblP38Admins").select("email, is_active").ilike("email", userEmail).eq("is_active", true).limit(1);
+
+    if (adminError || !adminRows || adminRows.length === 0) {
+      return new Response(JSON.stringify({ error: "This account is not a P38 admin" }), { status: 403, headers: corsHeaders });
+    }
+
+    const body = await req.json();
     const payload = {
       section_title: String(body.section_title || "").trim(),
       content: String(body.content || "").trim(),
@@ -43,43 +42,16 @@ serve(async (req) => {
     };
 
     if (!payload.section_title || !payload.content) {
-      return new Response(JSON.stringify({ error: "section_title and content are required" }), {
-        status: 400,
-        headers: corsHeaders
-      });
+      return new Response(JSON.stringify({ error: "section_title and content are required" }), { status: 400, headers: corsHeaders });
     }
 
-    let result;
-    if (body.id) {
-      result = await supabase
-        .from("TblP38Handbook")
-        .update(payload)
-        .eq("id", body.id)
-        .select()
-        .single();
-    } else {
-      result = await supabase
-        .from("TblP38Handbook")
-        .insert([payload])
-        .select()
-        .single();
-    }
+    const result = body.id
+      ? await supabase.from("TblP38Handbook").update(payload).eq("id", body.id).select().single()
+      : await supabase.from("TblP38Handbook").insert([payload]).select().single();
 
-    if (result.error) {
-      return new Response(JSON.stringify({ error: result.error }), {
-        status: 400,
-        headers: corsHeaders
-      });
-    }
-
-    return new Response(JSON.stringify({ data: result.data }), {
-      status: 200,
-      headers: corsHeaders
-    });
+    if (result.error) return new Response(JSON.stringify({ error: result.error }), { status: 400, headers: corsHeaders });
+    return new Response(JSON.stringify({ data: result.data }), { status: 200, headers: corsHeaders });
   } catch (err) {
-    return new Response(JSON.stringify({ error: String(err?.message || err) }), {
-      status: 500,
-      headers: corsHeaders
-    });
+    return new Response(JSON.stringify({ error: String(err?.message || err) }), { status: 500, headers: corsHeaders });
   }
 });

@@ -1,52 +1,5 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>目光空間｜管理後台</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <header class="site-header">
-    <div>
-      <p class="eyebrow">VisionSpace Internal System</p>
-      <h1>員工手冊管理後台</h1>
-      <p class="subtitle">新增、修改、停用手冊章節</p>
-    </div>
-    <nav>
-      <a href="index.html">手冊</a>
-      <a href="login.html">登入</a>
-    </nav>
-  </header>
-  <main class="admin-layout">
-    <section class="card">
-      <h2>新增／更新章節</h2>
-      <input id="sectionId" type="hidden">
-      <label>章節標題 section_title</label>
-      <input id="sectionTitle" placeholder="例如：公司定位與文化">
-      <label>章節內容 content</label>
-      <textarea id="sectionContent" rows="10" placeholder="請輸入章節內容，可使用換行。"></textarea>
-      <label>顯示順序 display_order</label>
-      <input id="displayOrder" type="number" value="1">
-      <label>狀態 is_active</label>
-      <select id="isActive">
-        <option value="true">啟用</option>
-        <option value="false">停用</option>
-      </select>
-      <div class="button-row">
-        <button onclick="saveSection()">儲存章節</button>
-        <button class="secondary" onclick="clearForm()">清空表單</button>
-      </div>
-      <div id="adminStatus" class="status"></div>
-    </section>
-    <section class="card">
-      <h2>現有章節</h2>
-      <button class="secondary" onclick="loadAdminSections()">重新載入</button>
-      <div id="sectionList" class="admin-list">載入中...</div>
-    </section>
-  </main>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/admin.js"></script>
-</body>
-</html>
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>目光空間｜管理後台</title><link rel="stylesheet" href="css/style.css"></head>
+<body><header class="site-header"><div><p class="eyebrow">VisionSpace Internal System</p><h1>員工手冊管理後台</h1><p class="subtitle">登入後才可進入；非管理員會被導回登入頁。</p></div><nav><a href="index.html">手冊</a><a href="login.html">登入</a><button class="nav-button" onclick="logoutAndGo()">登出</button></nav></header>
+<main class="admin-layout" id="adminApp" style="display:none;"><section class="card"><h2>新增／更新章節</h2><input id="sectionId" type="hidden"><label>章節標題 section_title</label><input id="sectionTitle" placeholder="例如：公司定位與文化"><label>章節內容 content</label><textarea id="sectionContent" rows="10" placeholder="請輸入章節內容，可使用換行。"></textarea><label>顯示順序 display_order</label><input id="displayOrder" type="number" value="1"><label>狀態 is_active</label><select id="isActive"><option value="true">啟用</option><option value="false">停用</option></select><div class="button-row"><button onclick="saveSection()">儲存章節</button><button class="secondary" onclick="clearForm()">清空表單</button></div><div id="adminStatus" class="status"></div></section><section class="card"><h2>現有章節</h2><button class="secondary" onclick="loadAdminSections()">重新載入</button><div id="sectionList" class="admin-list">載入中...</div></section></main>
+<main class="single-panel" id="guardPanel"><section class="card"><h2>檢查登入狀態中...</h2><div id="guardStatus" class="status">請稍候。</div></section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="js/admin.js"></script></body></html>
