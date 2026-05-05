@@ -1,15 +1,37 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<title>員工手冊</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>目光空間｜員工手冊</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="loadHandbook()">
-<h1>VisionSpace 員工手冊</h1>
-<div id="content"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="js/config.js"></script>
-<script src="js/main.js"></script>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">VisionSpace Internal System</p>
+      <h1>目光空間員工手冊</h1>
+      <p class="subtitle">設計驅動・工程落實・文件化管理</p>
+    </div>
+    <nav>
+      <a href="index.html">手冊</a>
+      <a href="login.html">登入</a>
+      <a href="admin.html">管理後台</a>
+    </nav>
+  </header>
+  <main class="layout">
+    <aside class="toc">
+      <h2>章節</h2>
+      <div id="tocList">載入中...</div>
+    </aside>
+    <section class="content-panel">
+      <div id="status" class="status">正在讀取手冊內容...</div>
+      <div id="content"></div>
+    </section>
+  </main>
+  <footer><p>© VisionSpace｜P38 目光空間制度建立</p></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

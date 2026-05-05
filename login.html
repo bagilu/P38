@@ -1,12 +1,36 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>登入</title></head>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>目光空間｜登入</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
 <body>
-<h2>登入系統</h2>
-<input id="email" placeholder="Email">
-<button onclick="login()">登入</button>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="js/config.js"></script>
-<script src="js/login.js"></script>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">VisionSpace Internal System</p>
+      <h1>登入</h1>
+      <p class="subtitle">管理後台可搭配 Supabase Auth 使用</p>
+    </div>
+    <nav>
+      <a href="index.html">手冊</a>
+      <a href="admin.html">管理後台</a>
+    </nav>
+  </header>
+  <main class="single-panel">
+    <section class="card">
+      <h2>Email Magic Link 登入</h2>
+      <p>輸入已授權的 Email，系統會寄送登入連結。</p>
+      <label>Email</label>
+      <input id="email" type="email" placeholder="name@example.com">
+      <button onclick="login()">寄送登入連結</button>
+      <button class="secondary" onclick="logout()">登出</button>
+      <div id="loginStatus" class="status"></div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/login.js"></script>
 </body>
 </html>

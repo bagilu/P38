@@ -1,0 +1,8 @@
+-- 選用：嚴格權限方向說明
+-- 目前 v3.1 為了方便測試，admin.html 直接 select 全部章節。
+-- 若未來要正式上線，建議：
+-- 1. 移除 public read all policy
+-- 2. 另建 TblP38Users 或使用 Supabase Auth user metadata 判斷 admin
+-- 3. 管理列表、新增、更新全部走 Edge Function
+--
+-- 此檔僅為備忘，不建議初次測試時執行。
