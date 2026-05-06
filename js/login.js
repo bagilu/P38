@@ -1,8 +1,1 @@
-async function login(){
-  const email=document.getElementById("email").value.trim(), status=document.getElementById("loginStatus");
-  if(!email){status.textContent="請輸入 Email。"; return;}
-  const redirectTo=window.location.href.replace("login.html","admin.html");
-  const {error}=await supabaseClient.auth.signInWithOtp({email, options:{emailRedirectTo:redirectTo}});
-  status.textContent=error ? "登入失敗："+error.message : "已寄出登入連結，請到 Email 收信。";
-}
-async function logout(){await supabaseClient.auth.signOut(); document.getElementById("loginStatus").textContent="已登出。";}
+async function login(){const email=document.getElementById("email").value.trim(),target=document.getElementById("redirectTarget").value,status=document.getElementById("loginStatus");if(!email){status.textContent="請輸入 Email。";return}const base=window.location.href.substring(0,window.location.href.lastIndexOf("/")+1),redirectTo=base+target;const{error}=await supabaseClient.auth.signInWithOtp({email,options:{emailRedirectTo:redirectTo}});if(error){status.className="status error";status.textContent="登入失敗："+error.message;return}status.className="status success";status.textContent="已寄出登入連結，請到 Email 收信。"}async function logout(){await supabaseClient.auth.signOut();document.getElementById("loginStatus").textContent="已登出。"}
